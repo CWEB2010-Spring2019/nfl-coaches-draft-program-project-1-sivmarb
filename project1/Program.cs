@@ -3,11 +3,22 @@ using System.Collections.Generic;
 
 namespace sportproject
 {
-    //  Comment
     class Program
     {
         static void Main(string[] args)
         {
+            int[,] playerNum =
+{
+                {1, 2, 3, 4, 5},
+                {6, 7, 8, 9, 10},
+                {11, 12, 13, 14, 15},
+                {16, 17, 18, 19, 20},
+                {21, 22, 23, 24, 25},
+                {26, 27, 28, 29, 30},
+                {31, 32, 33, 34, 35},
+                {36, 37, 38, 39, 40}
+            };
+
             string[,] Schools =
             {
                 { "Ohio State", "Oklahoma", "Missouri", "Duke", "West Virginia" },
@@ -46,16 +57,15 @@ namespace sportproject
 
             string[,] Positions =
             {
-                {"Quarter-backs"},
-                {"Running-backs"},
-                {"Wide-receivers"},
-                {"Defensive Linemen"},
-                {"Defensive-backs"},
-                {"Tight-ends"},
-                {"Line-backers"},
-                {"Offensive Tackles"}
+                {"Quarter-backs","Quarter-backs","Quarter-backs","Quarter-backs","Quarter-backs"},
+                {"Running-backs","Running-backs","Running-backs","Running-backs","Running-backs"},
+                {"Wide-receivers","Wide-receivers","Wide-receivers","Wide-receivers","Wide-receivers"},
+                {"Defensive Linemen","Defensive Linemen","Defensive Linemen","Defensive Linemen","Defensive Linemen"},
+                {"Defensive-backs","Defensive-backs","Defensive-backs","Defensive-backs","Defensive-backs"},
+                {"Tight-ends","Tight-ends","Tight-ends","Tight-ends","Tight-ends"},
+                {"Line-backers","Line-backers","Line-backers","Line-backers","Line-backers"},
+                {"Offensive Tackles","Offensive Tackles","Offensive Tackles","Offensive Tackles","Offensive Tackles"}
             };
-
 
             List<Players> PlayersList = new List<Players>();
             List<Players> salaryPayList = new List<Players>();
@@ -64,34 +74,132 @@ namespace sportproject
             {
                 for (var x = 0; x < 5; x++)
                 {
-                    Players aPlayers = new Players(Players[i, x], salaryPay[i, x]);
+                    Players aPlayers = new Players(playerNum[i, x], Players[i, x], Positions[i, x], Schools[i, x], salaryPay[i, x]);
                     PlayersList.Add(aPlayers);
                 }
 
             }
 
-            PlayersList.ForEach(x => Console.WriteLine(x.ToString()));
             Console.WriteLine("");
             Console.ReadKey();
         }
 
-    }
+
+        public string start = "";
+        public string EXIT = "x";
+        int maxExpenses = 95000000;
+        int moneyAmount = 0;
+
+        StartProgram(); //start the program
+        while (start != EXIT) {
+
+        Console.Clear();
+
+        PlayersList.ForEach(x => Console.WriteLine(x.ToString()));
+        Console.WriteLine("Please enter a number of which player you'd like to select: ");
+
+                int choice = Convert.ToInt32(Console.ReadLine());
+                 for (int i = PlayersList.Count - 1; i >= 0; i--)
+                        {
+                            if (PlayersList[i].playerNum == choice)
+                            {
+                                salaryPayList.Add(PlayersList[i]);
+                                maxExpenses = maxExpenses - PlayersList[i].salary;
+                                moneyAmount = moneyAmount + PlayersList[i].salary;
+                                PlayersList.RemoveAt(i);
+                            }
+
+
 }
 
-public class Players
+                        if (maxExpenses <= 0)
+                        {
+                            Console.Clear();
+
+                            Console.WriteLine("The max amount has exceeded, please try again and stay under the $95,000,000 budget this time.");
+                            Console.WriteLine("Now you must restart the program!");
+                            start = "x";
+                            Console.ReadLine();
+
+                        }else{
+
+                            if (salaryPayList.Count >= 5)
+                            {
+                                start = "x";
+
+                            }else{
+
+                                Console.Clear();
+
+                                Console.WriteLine("You have drafted: ");
+                                foreach (Players i in salaryPayList)
+                                {
+                                    Console.WriteLine(i.ToString());
+                                }
+                                Console.WriteLine("Current cost of drafted players is $" + moneyAmount + ".");
+                                Console.WriteLine("Current budget is $" + maxExpenses + ".");
+                                Console.WriteLine("To continue drafting players, please press <ENTER>.");
+                                Console.WriteLine("To exit the program, please press <X>.");
+                                start = Console.ReadLine();
+                            }
+                        }
+
+                    }
+                        // while loop ends here
+
+                    Console.Clear();
+                    Console.WriteLine("You have selected the following: ");
+                    foreach (Players i in salaryPayList)
+                    {
+                        Console.WriteLine(i.ToString());
+                    }
+
+                    Console.WriteLine("The total cost is $" + moneyAmount + ".");
+                    Console.WriteLine("Amount of budget that has been left over is $" + maxExpenses + ".");
+                    EndProgram();
+Console.ReadLine();
+
+
+                }
+                    // end of EndProgram();
+
+            public static void StartProgram();
+            {
+                Console.WriteLine("Welcome to the NFL Drafting Program!");
+                Console.WriteLine("This program will help you draft players under a budget of $95,000,000.");
+                Console.WriteLine("To get started with the program, please press <ENTER>.");
+            }
+            public static void EndProgram();
+            {
+                Console.WriteLine("The program has ended! Thank you for using the program.");
+            }
+    }
+
+    }
+        
+}
+
+    public class Players
 {
+    public int playerNum { get; set; }
     public string name { get; set; }
+    public string Positions { get; set; }
+    public string Schools { get; set; }
     public int salaryPay { get; set; }
 
-    public Players(string name, int salaryPay)
+    public Players(int playerNum, string name, string Positions, string Schools, int salaryPay)
     {
+        this.playerNum = playerNum;
         this.name = name;
+        this.Positions = Positions;
+        this.Schools = Schools;
         this.salaryPay = salaryPay;
     }
 
     public override string ToString()
     {
-        return string.Format("" + name + "$" + salaryPay);
+        return string.Format(playerNum + "" + name + " plays " + Positions + " at " + Schools + " with a salary of $" + salaryPay + ".");
     }
 
+}
 }
